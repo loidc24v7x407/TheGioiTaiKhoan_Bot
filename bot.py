@@ -3,7 +3,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandle
 import random, asyncio, urllib.parse
 
 # 🔹 Token bot thật từ @BotFather
-TOKEN = "Y8357378826:AAFR9G1_8U2fbu2ExLPdKNGfnF42UElh6pI"
+TOKEN = "8357378826:AAHH4D3CBOBwMt4_WysH4jNk0MjOX4cNVMY"
 
 # 🔹 Cấu hình tài khoản VietQR
 BANK_ID = "LPB"  # Ví dụ: LPB, VCB, MBB, ACB...
