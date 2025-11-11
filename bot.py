@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 import os
 
-# ✅ Lấy token từ biến môi trường trên Render
+# ✅ Lấy token từ biến môi trường (Render -> Environment -> BOT_TOKEN)
 TOKEN = os.getenv("8357378826:AAEGJX9YAowcWbRzVVoYktme9IF-ZbDsJHA")
 
 if not TOKEN:
@@ -10,7 +10,7 @@ if not TOKEN:
     exit()
 
 # ==========================
-# 1️⃣ /start command
+# 1️⃣ Lệnh /start
 # ==========================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     menu_keyboard = [
@@ -41,69 +41,70 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # ==========================
-# 2️⃣ Callback handler
+# 2️⃣ Xử lý khi bấm nút menu
 # ==========================
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()  # bắt buộc có dòng này
+    await query.answer()  # tránh lỗi “loading...”
 
     data = query.data
     vietqr_base = "https://img.vietqr.io/image/LPB-LP07798725354-qr_only.png"
 
     if data == "canvanon":
-        await query.edit_message_text(
-            text=(
-                "🧾 *Canva Pro Nonprofits*\n"
-                "💰 Giá: 100.000đ / năm\n\n"
-                "📲 Quét mã QR bên dưới để thanh toán:\n"
-                f"{vietqr_base}\n\n"
-                "➡ Sau khi chuyển, nhắn tin "đã chuyển" để xác nhận!"
-            ),
-            parse_mode="Markdown"
+        text = (
+            "🧾 *Canva Pro Nonprofits*\n"
+            "💰 Giá: 200.000đ / năm\n\n"
+            "📲 Quét mã QR bên dưới để thanh toán:\n"
+            f"{vietqr_base}\n\n"
+            "➡ Sau khi chuyển, gửi ảnh biên lai để xác nhận đơn nhé!"
         )
 
     elif data == "canvaedu":
-        await query.edit_message_text(
-            text="🎓 *Canva Pro Education*\n💰 Giá: 50.000đ / năm\n📲 Quét QR để thanh toán:\n"
-                 f"{vietqr_base}",
-            parse_mode="Markdown"
+        text = (
+            "🎓 *Canva Pro Education*\n"
+            "💰 Giá: 150.000đ / năm\n"
+            f"📲 Quét QR để thanh toán:\n{vietqr_base}"
         )
 
     elif data == "ggedu":
-        await query.edit_message_text(
-            text="📧 *Google Workspace Education*\n💰 Giá: 5.000.000đ / năm\n📲 Thanh toán tại:\n"
-                 f"{vietqr_base}",
-            parse_mode="Markdown"
+        text = (
+            "📧 *Google Workspace Education*\n"
+            "💰 Giá: 250.000đ / năm\n"
+            f"📲 Thanh toán tại:\n{vietqr_base}"
         )
 
     elif data == "ggnon":
-        await query.edit_message_text(
-            text="🌐 *Google Workspace Nonprofits*\n💰 Giá: 8.000.000đ / năm\n📲 Thanh toán tại:\n"
-                 f"{vietqr_base}",
-            parse_mode="Markdown"
+        text = (
+            "🌐 *Google Workspace Nonprofits*\n"
+            "💰 Giá: 200.000đ / năm\n"
+            f"📲 Thanh toán tại:\n{vietqr_base}"
         )
 
     elif data == "myorders":
-        await query.edit_message_text("📦 Bạn chưa có đơn hàng nào. Hãy đặt thử ngay nhé!")
+        text = "📦 Bạn chưa có đơn hàng nào. Hãy đặt thử ngay nhé!"
 
     elif data == "check":
-        await query.edit_message_text("🔍 Hệ thống đang kiểm tra slot còn lại...")
+        text = "🔍 Hệ thống đang kiểm tra slot còn lại..."
 
     elif data == "refresh":
-        await query.edit_message_text("🔄 Cập nhật dữ liệu slot mới nhất...")
+        text = "🔄 Cập nhật dữ liệu slot mới nhất..."
 
     elif data == "help":
-        await query.edit_message_text(
+        text = (
             "❓ *Hướng dẫn sử dụng bot*\n\n"
             "1️⃣ Gõ /start để mở menu.\n"
             "2️⃣ Chọn sản phẩm bạn muốn mua.\n"
             "3️⃣ Quét QR để thanh toán đúng số tiền.\n"
-            "4️⃣ Gửi ảnh biên lai để xác nhận đơn ✅",
-            parse_mode="Markdown"
+            "4️⃣ Gửi ảnh biên lai để xác nhận đơn ✅"
         )
 
+    else:
+        text = "⚠️ Lựa chọn không hợp lệ, vui lòng thử lại!"
+
+    await query.edit_message_text(text=text, parse_mode="Markdown")
+
 # ==========================
-# 3️⃣ Chạy bot
+# 3️⃣ Khởi chạy bot
 # ==========================
 def main():
     print("🚀 Bot đang chạy với VietQR động...")
