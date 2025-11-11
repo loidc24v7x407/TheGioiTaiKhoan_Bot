@@ -2,7 +2,12 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 import os
 
-TOKEN = "8357378826:AAH5j0DcdlWQ83We4mudtJfyORxc94VZQwM"
+# ✅ Lấy token từ biến môi trường trên Render
+TOKEN = os.getenv("8357378826:AAEGJX9YAowcWbRzVVoYktme9IF-ZbDsJHA")
+
+if not TOKEN:
+    print("❌ LỖI: BOT_TOKEN chưa được khai báo trong Render > Environment tab.")
+    exit()
 
 # ==========================
 # 1️⃣ /start command
@@ -24,13 +29,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(menu_keyboard)
 
     await update.message.reply_text(
-        "👋 Xin chào Thế Giới Tài Khoản!\n"
-        "Chào mừng đến với hệ thống đặt hàng tự động của 🎯 *Thế Giới Tài Khoản!*\n\n"
+        "👋 Xin chào *Thế Giới Tài Khoản!*\n"
+        "Chào mừng đến với hệ thống đặt hàng tự động 🎯\n\n"
         "━━━━━━━━━━━━━━━━━━━\n"
         "📦 *MENU SẢN PHẨM*\n"
         "━━━━━━━━━━━━━━━━━━━\n\n"
         "Chọn sản phẩm bạn muốn mua bên dưới nhé! 👇\n\n"
-        "💡 Sau khi chọn, bot sẽ tự tạo QR thanh toán chính xác số tiền và nội dung chuyển khoản.",
+        "💡 Sau khi chọn, bot sẽ gửi QR thanh toán tự động qua VietQR.",
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
@@ -40,49 +45,74 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ==========================
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()  # Phản hồi để Telegram không báo lỗi “loading...”
-    
+    await query.answer()  # bắt buộc có dòng này
+
     data = query.data
+    vietqr_base = "https://img.vietqr.io/image/LPB-LP07798725354-qr_only.png"
 
     if data == "canvanon":
         await query.edit_message_text(
-            "🧾 *Canva Pro Nonprofits*\n"
-            "Giá: 200.000đ / năm\n"
-            "Vui lòng quét mã QR sau để thanh toán:\n"
-            "https://img.vietqr.io/image/LPB-LP07798725354-qr_only.png",
+            text=(
+                "🧾 *Canva Pro Nonprofits*\n"
+                "💰 Giá: 100.000đ / năm\n\n"
+                "📲 Quét mã QR bên dưới để thanh toán:\n"
+                f"{vietqr_base}\n\n"
+                "➡ Sau khi chuyển, nhắn tin "đã chuyển" để xác nhận!"
+            ),
             parse_mode="Markdown"
         )
+
     elif data == "canvaedu":
-        await query.edit_message_text("🎓 Canva Pro Education — chỉ 150.000đ / năm!")
+        await query.edit_message_text(
+            text="🎓 *Canva Pro Education*\n💰 Giá: 50.000đ / năm\n📲 Quét QR để thanh toán:\n"
+                 f"{vietqr_base}",
+            parse_mode="Markdown"
+        )
+
     elif data == "ggedu":
-        await query.edit_message_text("📧 Google Workspace for Education — 250.000đ / năm!")
+        await query.edit_message_text(
+            text="📧 *Google Workspace Education*\n💰 Giá: 5.000.000đ / năm\n📲 Thanh toán tại:\n"
+                 f"{vietqr_base}",
+            parse_mode="Markdown"
+        )
+
     elif data == "ggnon":
-        await query.edit_message_text("🌐 Google Workspace for Nonprofits — 200.000đ / năm!")
+        await query.edit_message_text(
+            text="🌐 *Google Workspace Nonprofits*\n💰 Giá: 8.000.000đ / năm\n📲 Thanh toán tại:\n"
+                 f"{vietqr_base}",
+            parse_mode="Markdown"
+        )
+
     elif data == "myorders":
-        await query.edit_message_text("📦 Bạn chưa có đơn hàng nào.")
+        await query.edit_message_text("📦 Bạn chưa có đơn hàng nào. Hãy đặt thử ngay nhé!")
+
     elif data == "check":
         await query.edit_message_text("🔍 Hệ thống đang kiểm tra slot còn lại...")
+
     elif data == "refresh":
-        await query.edit_message_text("🔄 Đang cập nhật dữ liệu slot...")
+        await query.edit_message_text("🔄 Cập nhật dữ liệu slot mới nhất...")
+
     elif data == "help":
         await query.edit_message_text(
             "❓ *Hướng dẫn sử dụng bot*\n\n"
-            "1️⃣ Gõ /start để mở menu\n"
-            "2️⃣ Chọn sản phẩm muốn mua\n"
-            "3️⃣ Quét QR thanh toán\n"
-            "4️⃣ Chờ bot xác nhận đơn tự động ✅",
+            "1️⃣ Gõ /start để mở menu.\n"
+            "2️⃣ Chọn sản phẩm bạn muốn mua.\n"
+            "3️⃣ Quét QR để thanh toán đúng số tiền.\n"
+            "4️⃣ Gửi ảnh biên lai để xác nhận đơn ✅",
             parse_mode="Markdown"
         )
 
 # ==========================
-# 3️⃣ Khởi chạy bot
+# 3️⃣ Chạy bot
 # ==========================
-app = ApplicationBuilder().token(TOKEN).build()
+def main():
+    print("🚀 Bot đang chạy với VietQR động...")
+    app = ApplicationBuilder().token(TOKEN).build()
 
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CallbackQueryHandler(button_handler))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CallbackQueryHandler(button_handler))
 
-print("🚀 Bot đang chạy với VietQR động...")
-app.run_polling()
+    app.run_polling()
 
-
+if __name__ == "__main__":
+    main()
