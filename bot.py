@@ -3,8 +3,8 @@ from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandle
 import os
 
 # ✅ Lấy token từ biến môi trường (Render -> Environment -> BOT_TOKEN)
-TOKEN = os.getenv("8357378826:AAEGJX9YAowcWbRzVVoYktme9IF-ZbDsJHA")
-
+TOKEN = os.getenv("8357378826:AAHjqtK4Wd9IE8k9jL4_J0MYICNlr_rOc8s")
+print("🔍 DEBUG TOKEN:", TOKEN)  # thêm dòng này
 if not TOKEN:
     print("❌ LỖI: BOT_TOKEN chưa được khai báo trong Render > Environment tab.")
     exit()
@@ -117,3 +117,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
