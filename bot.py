@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 import os
 
-TOKEN = os.getenv("8357378826:AAHH4D3CBOBwMt4_WysH4jNk0MjOX4cNVMY")
+TOKEN = os.getenv("8357378826:AAEZ73yNMwyLUo7QFkhYA_-9zMh5F92n1d0")
 
 # ==========================
 # 1️⃣ /start command
@@ -84,3 +84,4 @@ app.add_handler(CallbackQueryHandler(button_handler))
 
 print("🚀 Bot đang chạy với VietQR động...")
 app.run_polling()
+
