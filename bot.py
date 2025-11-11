@@ -105,9 +105,7 @@ app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CallbackQueryHandler(button_callback))
 
-async def main():
-    print("🚀 Bot đang chạy với VietQR động...")
-    await app.run_polling()
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    print("🚀 Bot đang chạy với VietQR động...")
+    app.run_polling()
+
